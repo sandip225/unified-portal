@@ -1,11 +1,13 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional, List, Any
 from datetime import datetime
 from app.models import ServiceType, ApplicationStatus, DocumentType
 
 # Auth Schemas
 class UserCreate(BaseModel):
-    email: str
+    model_config = ConfigDict(validate_assignment=False)
+    
+    email: str = Field(..., description="Email address")
     mobile: str
     password: str
     full_name: str
