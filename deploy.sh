@@ -72,4 +72,4 @@ echo "API Docs: http://$(curl -s http://169.254.169.254/latest/meta-data/public-
 echo ""
 echo "To view logs: sudo docker-compose logs -f"
 echo "To stop services: sudo docker-compose down"
-echo "=========================================="
+echo "========================================
