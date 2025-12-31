@@ -1,11 +1,11 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import Optional, List, Any
 from datetime import datetime
 from app.models import ServiceType, ApplicationStatus, DocumentType
 
 # Auth Schemas
 class UserCreate(BaseModel):
-    email: EmailStr
+    email: str
     mobile: str
     password: str
     full_name: str
