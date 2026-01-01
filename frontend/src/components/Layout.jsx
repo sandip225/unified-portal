@@ -15,9 +15,8 @@ const Layout = () => {
   const navItems = [
     { path: '/', icon: Home, label: 'Dashboard' },
     { path: '/services', icon: Settings, label: 'Services' },
-    { path: '/applications', icon: FileText, label: 'Applications' },
+    { path: '/applications', icon: FileText, label: 'My Applications' },
     { path: '/documents', icon: FileText, label: 'Documents' },
-    { path: '/rpa-demo', icon: Shield, label: 'RPA Demo' },
     { path: '/profile', icon: User, label: 'Profile' },
   ];
 

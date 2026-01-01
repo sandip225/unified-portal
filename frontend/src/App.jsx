@@ -8,12 +8,8 @@ import Profile from './pages/Profile';
 import Documents from './pages/Documents';
 import Services from './pages/Services';
 import Applications from './pages/Applications';
-import ElectricityForm from './pages/ElectricityForm';
-import GasForm from './pages/GasForm';
-import WaterForm from './pages/WaterForm';
-import PropertyForm from './pages/PropertyForm';
+import NameChangeForm from './pages/NameChangeForm';
 import RPADemo from './pages/RPADemo';
-import UniversalServiceForm from './pages/UniversalServiceForm';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -53,15 +49,10 @@ function App() {
             <Route path="documents" element={<Documents />} />
             <Route path="services" element={<Services />} />
             <Route path="applications" element={<Applications />} />
-            <Route path="electricity" element={<ElectricityForm />} />
-            <Route path="electricity/:subServiceType" element={<UniversalServiceForm />} />
-            <Route path="gas" element={<GasForm />} />
-            <Route path="gas/:subServiceType" element={<UniversalServiceForm />} />
-            <Route path="water" element={<WaterForm />} />
-            <Route path="water/:subServiceType" element={<UniversalServiceForm />} />
-            <Route path="property" element={<PropertyForm />} />
-            <Route path="property/:subServiceType" element={<UniversalServiceForm />} />
-            <Route path="service/:serviceType/:subServiceType" element={<UniversalServiceForm />} />
+            <Route path="electricity" element={<NameChangeForm />} />
+            <Route path="gas" element={<NameChangeForm />} />
+            <Route path="water" element={<NameChangeForm />} />
+            <Route path="property" element={<NameChangeForm />} />
             <Route path="rpa-demo" element={<RPADemo />} />
           </Route>
         </Routes>
