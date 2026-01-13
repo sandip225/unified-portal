@@ -21,18 +21,48 @@ window.addEventListener('load', function() {
       
       // Wait 2 seconds for page to fully load
       setTimeout(function() {
-        console.log('🔍 Looking for mobile field...');
         
-        // Find mobile field - be more specific!
-        // Look for input with placeholder "Mobile No" or id/name containing "mobile"
-        const mobileField = document.querySelector('input[placeholder*="Mobile"]') || 
-                           document.querySelector('input[id="mobile"]') || 
-                           document.querySelector('input[name="mobile"]') ||
-                           document.querySelector('input[type="text"][placeholder*="Mobile"]') ||
-                           document.querySelector('input[type="tel"]');
+        // Get ALL inputs on the page
+        const allInputs = document.querySelectorAll('input');
+        console.log('Total inputs found:', allInputs.length);
+        
+        // Log all inputs for debugging
+        allInputs.forEach(function(input, index) {
+          console.log('Input ' + index + ':', {
+            type: input.type,
+            placeholder: input.placeholder,
+            name: input.name,
+            id: input.id,
+            className: input.className
+          });
+        });
+        
+        // Find the FIRST text input (should be mobile)
+        // Skip hidden inputs and checkboxes
+        let mobileField = null;
+        for (let i = 0; i < allInputs.length; i++) {
+          const input = allInputs[i];
+          
+          // Skip non-text inputs
+          if (input.type === 'hidden' || input.type === 'checkbox' || input.type === 'submit' || input.type === 'button') {
+            continue;
+          }
+          
+          // Skip captcha field (usually has "captcha" in placeholder or comes after select)
+          const placeholder = (input.placeholder || '').toLowerCase();
+          if (placeholder.includes('captcha')) {
+            console.log('Skipping captcha field at index', i);
+            continue;
+          }
+          
+          // This should be the mobile field (first text input that's not captcha)
+          mobileField = input;
+          console.log('✅ Found mobile field at index', i);
+          break;
+        }
         
         if (mobileField) {
-          console.log('✅ Found mobile field:', mobileField);
+          mobileField.focus();
           mobileField.value = mobile;
           mobileField.dispatchEvent(new Event('input', { bubbles: true }));
           mobileField.dispatchEvent(new Event('change', { bubbles: true }));
@@ -43,49 +73,12 @@ window.addEventListener('load', function() {
             mobileField.style.backgroundColor = '';
           }, 3000);
         } else {
-          console.error('❌ Mobile field not found! Trying alternative...');
-          
-          // Alternative: Find all inputs and look for the one that's NOT captcha
-          const allInputs = document.querySelectorAll('input[type="text"]');
-          console.log('Found inputs:', allInputs.length);
-          
-          for (let i = 0; i < allInputs.length; i++) {
-            const input = allInputs[i];
-            const placeholder = input.placeholder || '';
-            const name = input.name || '';
-            const id = input.id || '';
-            
-            console.log('Input ' + i + ':', { placeholder, name, id });
-            
-            // Skip captcha field
-            if (placeholder.toLowerCase().includes('captcha') || 
-                name.toLowerCase().includes('captcha') ||
-                id.toLowerCase().includes('captcha')) {
-              console.log('Skipping captcha field');
-              continue;
-            }
-            
-            // This should be the mobile field
-            if (placeholder.toLowerCase().includes('mobile') || 
-                name.toLowerCase().includes('mobile') ||
-                id.toLowerCase().includes('mobile') ||
-                i === 0) { // First non-captcha input is usually mobile
-              input.value = mobile;
-              input.dispatchEvent(new Event('input', { bubbles: true }));
-              input.dispatchEvent(new Event('change', { bubbles: true }));
-              input.style.backgroundColor = '#90EE90';
-              console.log('✅ Filled mobile in input ' + i + ':', mobile);
-              break;
-            }
-          }
+          console.error('❌ Could not find mobile field!');
         }
         
         // Find DISCOM dropdown
         console.log('🔍 Looking for DISCOM dropdown...');
-        const discomDropdown = document.querySelector('select[id="discom"]') ||
-                              document.querySelector('select[name="discom"]') ||
-                              document.querySelector('select.form-control') ||
-                              document.querySelector('select');
+        const discomDropdown = document.querySelector('select');
         
         if (discomDropdown) {
           console.log('✅ Found DISCOM dropdown!');
