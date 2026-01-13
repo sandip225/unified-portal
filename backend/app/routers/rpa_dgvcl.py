@@ -37,13 +37,22 @@ async def trigger_dgvcl_autofill(
     Bot will open browser and fill form automatically
     """
     try:
-        # Get RPA script path
-        rpa_script = Path(__file__).parent.parent.parent.parent / "rpa-automation" / "dgvcl_name_change_final.py"
+        # Get RPA script path - check multiple locations
+        rpa_script_paths = [
+            Path(__file__).parent.parent / "rpa-automation" / "dgvcl_name_change_final.py",  # In backend folder
+            Path(__file__).parent.parent.parent.parent / "rpa-automation" / "dgvcl_name_change_final.py",  # Root folder
+        ]
         
-        if not rpa_script.exists():
+        rpa_script = None
+        for path in rpa_script_paths:
+            if path.exists():
+                rpa_script = path
+                break
+        
+        if not rpa_script:
             raise HTTPException(
                 status_code=500,
-                detail="RPA script not found. Please ensure rpa-automation folder exists."
+                detail=f"RPA script not found. Checked: {[str(p) for p in rpa_script_paths]}"
             )
         
         # Prepare data for RPA bot
