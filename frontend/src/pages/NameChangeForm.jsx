@@ -83,9 +83,17 @@ const NameChangeForm = () => {
 
       // Store form data for auto-fill
       localStorage.setItem('dgvcl_autofill_data', JSON.stringify({
+        application_type: 'name_change',
         mobile: formData.mobile,
         consumer_number: formData.consumer_number || formData.service_number,
         provider: selectedSupplier.name,
+        // Name change specific fields
+        new_name: formData.new_name,
+        reason: formData.reason,
+        security_deposit_option: formData.security_deposit_option,
+        old_security_deposit: formData.old_security_deposit,
+        applicant_name: formData.applicant_name,
+        email: formData.email,
         timestamp: Date.now()
       }));
 
@@ -158,11 +166,74 @@ const NameChangeForm = () => {
       property_id: 'Property ID',
       ward: 'Ward',
       document_number: 'Document Number',
-      sub_registrar_office: 'Sub Registrar Office'
+      sub_registrar_office: 'Sub Registrar Office',
+      // DGVCL Name Change fields
+      new_name: 'New Name',
+      reason: 'Reason for Name Change',
+      security_deposit_option: 'Security Deposit Option',
+      old_security_deposit: 'Old Security Deposit Amount'
     };
 
     const label = fieldLabels[fieldName] || fieldName;
-    const isRequired = ['applicant_name', 'mobile'].includes(fieldName);
+    const isRequired = ['applicant_name', 'mobile', 'new_name'].includes(fieldName);
+
+    // Special handling for dropdown fields
+    if (fieldName === 'reason') {
+      return (
+        <div key={fieldName}>
+          <label className="block text-gray-700 text-sm font-medium mb-1">
+            {label}{isRequired && <span className="text-red-500">*</span>}
+          </label>
+          <select
+            name={fieldName}
+            value={formData[fieldName] || ''}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            required={isRequired}
+          >
+            <option value="">Select Reason</option>
+            <option value="Marriage">Marriage</option>
+            <option value="Divorce">Divorce</option>
+            <option value="Legal Name Change">Legal Name Change</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      );
+    }
+
+    if (fieldName === 'security_deposit_option') {
+      return (
+        <div key={fieldName}>
+          <label className="block text-gray-700 text-sm font-medium mb-1">
+            {label}{isRequired && <span className="text-red-500">*</span>}
+          </label>
+          <div className="space-y-2">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name={fieldName}
+                value="entire"
+                checked={formData[fieldName] === 'entire'}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              Entire amount to be paid by consumer
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name={fieldName}
+                value="difference"
+                checked={formData[fieldName] === 'difference'}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              Difference amount to be paid by consumer
+            </label>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div key={fieldName}>
@@ -403,7 +474,11 @@ const NameChangeForm = () => {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  {selectedSupplier.fields.map(field => renderFieldInput(field))}
+                  {/* Use nameChangeFields for DGVCL, otherwise use regular fields */}
+                  {(selectedSupplier.id === 'dgvcl' && selectedSupplier.nameChangeFields 
+                    ? selectedSupplier.nameChangeFields 
+                    : selectedSupplier.fields
+                  ).map(field => renderFieldInput(field))}
 
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4 mt-6">
                     <p className="text-sm text-green-800">

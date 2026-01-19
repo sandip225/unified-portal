@@ -29,6 +29,11 @@ function runExtension() {
   else if (url.includes('LTConsumerReg.php')) {
     setTimeout(handleNewConnectionForm, 2000);
   }
+  
+  // NAME CHANGE FLOW
+  else if (url.includes('ltsrDetails_name_change.php')) {
+    setTimeout(handleNameChangeForm, 2000);
+  }
 }
 
 // ============ LOGIN FLOW ============
@@ -91,15 +96,124 @@ function handleSelectUser() {
 }
 
 function handleDashboard() {
-  showMsg('✅ Login Successful!\n👉 Navigate to: New Connection → LT New Connection', 'green');
+  showMsg('✅ Login Successful!', 'green');
   
   // Check if we have new connection data
   const storedData = localStorage.getItem('dgvcl_autofill_data');
   if (storedData) {
     const data = JSON.parse(storedData);
     if (data.application_type === 'new_connection') {
-      showMsg('🔥 New Connection data ready!\n👉 Go to: New Connection → LT New Connection', 'purple');
+      showMsg('🤖 Auto-navigating to New Connection...', 'blue');
+      
+      // Wait 3 seconds then click New Connection
+      setTimeout(() => {
+        // Find New Connection link/button
+        const newConnectionLink = document.querySelector('a[href*="NewConnection"]') ||
+                                 document.querySelector('a[href*="newconnection"]') ||
+                                 document.querySelector('a[href*="LTConsumerReg"]') ||
+                                 document.querySelector('img[alt*="New Connection"]') ||
+                                 document.querySelector('img[alt*="new connection"]');
+        
+        if (newConnectionLink) {
+          console.log('✅ Found New Connection link, clicking...');
+          newConnectionLink.click();
+        } else {
+          // Try to find by text content
+          const allLinks = document.querySelectorAll('a, div, span');
+          allLinks.forEach(link => {
+            if (link.textContent && link.textContent.toLowerCase().includes('new connection')) {
+              console.log('✅ Found New Connection by text, clicking...');
+              link.click();
+            }
+          });
+        }
+        
+        // If still not found, show manual instruction
+        setTimeout(() => {
+          if (window.location.href.includes('prtlDashboard.php')) {
+            showMsg('👉 Please click "New Connection" manually', 'orange');
+          }
+        }, 2000);
+        
+      }, 3000);
+    } else {
+      showMsg('👉 Navigate to: New Connection → LT New Connection', 'purple');
     }
+  }
+}
+
+// ============ NAME CHANGE FORM ============
+function handleNameChangeForm() {
+  console.log('📍 LT Name Change Form detected');
+  
+  // Get stored data
+  const storedData = localStorage.getItem('dgvcl_autofill_data');
+  if (!storedData) {
+    console.log('❌ No stored data found');
+    return;
+  }
+  
+  const data = JSON.parse(storedData);
+  if (data.application_type !== 'name_change') {
+    console.log('❌ Not name change data');
+    return;
+  }
+  
+  console.log('📦 Filling Name Change form with:', data);
+  showMsg('🤖 Auto-filling Name Change form...', 'blue');
+  
+  let filled = 0;
+  
+  // Step 1: Applicant Details
+  
+  // New Name field
+  if (data.new_name) {
+    const nameInput = document.querySelector('input[name*="name"], input[name*="Name"]');
+    if (nameInput) {
+      fillInput(nameInput, data.new_name);
+      filled++;
+    }
+  }
+  
+  // Reason dropdown
+  if (data.reason) {
+    const reasonSelect = document.querySelector('select[name*="reason"], select[name*="Reason"]');
+    if (reasonSelect) {
+      selectOption(reasonSelect, data.reason);
+      filled++;
+    }
+  }
+  
+  // Security Deposit radio buttons
+  if (data.security_deposit_option) {
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach(radio => {
+      if (data.security_deposit_option === 'entire' && radio.value.includes('entire')) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change'));
+        filled++;
+      } else if (data.security_deposit_option === 'difference' && radio.value.includes('difference')) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change'));
+        filled++;
+      }
+    });
+  }
+  
+  // Old Security Deposit Amount
+  if (data.old_security_deposit) {
+    const oldDepositInput = document.querySelector('input[name*="old"], input[name*="Old"], input[name*="deposit"]');
+    if (oldDepositInput) {
+      fillInput(oldDepositInput, data.old_security_deposit);
+      filled++;
+    }
+  }
+  
+  if (filled > 0) {
+    showMsg(`✅ Auto-filled ${filled} fields!\n👉 Upload documents & Submit`, 'green');
+    console.log(`✅ Filled ${filled} fields in Name Change form`);
+  } else {
+    showMsg('⚠️ Could not find form fields\n👉 Please fill manually', 'orange');
   }
 }
 

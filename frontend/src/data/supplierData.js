@@ -138,6 +138,10 @@ export const suppliers = {
         hasOnlinePortal: true,
         offlineNote: 'Offline forms also available at DGVCL office',
         fields: ['consumer_number', 'applicant_name', 'mobile', 'email', 'address'],
+        nameChangeFields: [
+          'consumer_number', 'new_name', 'reason', 'security_deposit_option', 
+          'old_security_deposit', 'applicant_name', 'mobile', 'email'
+        ],
         newConnectionFields: [
           'consumer_type', 'category', 'area_type', 'connection_load',
           'applicant_name', 'mobile', 'email', 
