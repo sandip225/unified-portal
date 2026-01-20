@@ -71,6 +71,29 @@ function handleLoginPage() {
   }
   
   showMsg('✅ STEP 1: Auto-filled Login\n👉 Enter Captcha & Click Login', 'green');
+  
+  // Auto-click Login button after captcha is filled
+  const captchaInput = document.querySelector('input[placeholder*="Captcha"]') || 
+                      document.querySelector('input[placeholder*="captcha"]');
+  
+  if (captchaInput) {
+    // Monitor captcha input for changes
+    captchaInput.addEventListener('input', function() {
+      if (this.value.length >= 4) { // Assuming captcha is at least 4 characters
+        setTimeout(() => {
+          const loginBtn = document.querySelector('input[value="Login"]') ||
+                          document.querySelector('button[type="submit"]') ||
+                          document.querySelector('input[type="submit"]');
+          
+          if (loginBtn) {
+            console.log('✅ Captcha entered, auto-clicking Login...');
+            showMsg('🤖 Auto-clicking Login button...', 'blue');
+            loginBtn.click();
+          }
+        }, 1000); // Wait 1 second after captcha entry
+      }
+    });
+  }
 }
 
 // ============ STEP 2: OTP PAGE ============
@@ -86,6 +109,24 @@ function handleOTPPage() {
     otpInput.focus();
     otpInput.style.border = '2px solid #3498db';
     console.log('✅ OTP input field focused');
+    
+    // Auto-click Submit after OTP is entered
+    otpInput.addEventListener('input', function() {
+      if (this.value.length >= 4) { // Assuming OTP is at least 4 digits
+        setTimeout(() => {
+          const submitBtn = document.querySelector('input[value="Submit Otp"]') ||
+                           document.querySelector('button[type="submit"]') ||
+                           document.querySelector('input[type="submit"]') ||
+                           document.querySelector('button:contains("Submit")');
+          
+          if (submitBtn) {
+            console.log('✅ OTP entered, auto-clicking Submit...');
+            showMsg('🤖 Auto-clicking Submit button...', 'blue');
+            submitBtn.click();
+          }
+        }, 1000); // Wait 1 second after OTP entry
+      }
+    });
   }
 }
 
