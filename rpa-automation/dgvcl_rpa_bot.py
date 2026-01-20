@@ -42,11 +42,19 @@ class DGVCLRPABot:
         chrome_options.add_argument("--disable-images")
         
         try:
-            # Use WebDriver Manager to automatically handle ChromeDriver versions
-            service = Service(ChromeDriverManager().install())
-            self.driver = webdriver.Chrome(service=service, options=chrome_options)
+            # Try system ChromeDriver first
+            try:
+                service = Service('/usr/local/bin/chromedriver')
+                self.driver = webdriver.Chrome(service=service, options=chrome_options)
+                logger.info("✅ Chrome driver initialized with system ChromeDriver")
+            except Exception as e:
+                logger.warning(f"System ChromeDriver failed: {e}")
+                # Fallback to WebDriver Manager
+                service = Service(ChromeDriverManager().install())
+                self.driver = webdriver.Chrome(service=service, options=chrome_options)
+                logger.info("✅ Chrome driver initialized with WebDriver Manager")
+            
             self.driver.implicitly_wait(10)
-            logger.info("✅ Chrome driver initialized successfully")
             return True
         except Exception as e:
             logger.error(f"❌ Failed to initialize Chrome driver: {e}")
