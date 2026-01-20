@@ -1,5 +1,5 @@
 // DGVCL Complete Auto-Fill Extension - v5.0 (Complete Flow Automation)
-console.log('🚀 DGVCL Extension v5.0 - Complete Flow Automation');
+console.log('🚀 DGVCL Extension v6.0 - LATEST VERSION WITH CAPTCHA AUTO-CLICK');
 
 // Run on page load
 window.addEventListener('load', runExtension);
