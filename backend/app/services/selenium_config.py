@@ -92,6 +92,12 @@ class SeleniumConfig:
         if platform.system() == "Linux":
             chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_argument('--remote-debugging-port=9222')
+            chrome_options.add_argument('--disable-setuid-sandbox')
+            chrome_options.add_argument('--disable-background-timer-throttling')
+            chrome_options.add_argument('--disable-backgrounding-occluded-windows')
+            chrome_options.add_argument('--disable-renderer-backgrounding')
+            chrome_options.add_argument('--disable-features=TranslateUI')
+            chrome_options.add_argument('--disable-ipc-flooding-protection')
             # Use Chromium binary path (already installed)
             chrome_options.binary_location = '/usr/bin/chromium'
         
@@ -108,14 +114,25 @@ class SeleniumConfig:
             else:
                 # Use regular WebDriver with stealth configuration
                 chrome_options = self.get_chrome_options(headless, stealth_mode)
-                # Try system chromium-driver first, then ChromeDriverManager
-                try:
-                    # Use system chromium-driver (matches chromium version)
-                    service = Service('/usr/bin/chromedriver')
-                    driver = webdriver.Chrome(service=service, options=chrome_options)
-                except Exception as e:
-                    logger.warning(f"System chromedriver failed: {e}, trying ChromeDriverManager")
-                    # Fallback to ChromeDriverManager
+                
+                # For Docker/Linux environment, use system chromedriver
+                if platform.system() == "Linux":
+                    try:
+                        # Use system chromium-driver (matches chromium version)
+                        service = Service('/usr/bin/chromedriver')
+                        driver = webdriver.Chrome(service=service, options=chrome_options)
+                    except Exception as e:
+                        logger.warning(f"System chromedriver failed: {e}")
+                        # Try without service specification
+                        try:
+                            driver = webdriver.Chrome(options=chrome_options)
+                        except Exception as e2:
+                            logger.warning(f"Default Chrome failed: {e2}, trying ChromeDriverManager")
+                            # Fallback to ChromeDriverManager
+                            service = Service(ChromeDriverManager().install())
+                            driver = webdriver.Chrome(service=service, options=chrome_options)
+                else:
+                    # Windows/Mac - use ChromeDriverManager
                     service = Service(ChromeDriverManager().install())
                     driver = webdriver.Chrome(service=service, options=chrome_options)
             
