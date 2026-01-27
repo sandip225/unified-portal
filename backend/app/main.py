@@ -27,6 +27,8 @@ app.add_middleware(
         "http://54.167.51.207",
         "http://52.204.134.92",
         "https://52.204.134.92",
+        "http://54.235.42.222",
+        "https://54.235.42.222",
         "http://localhost"
     ],
     allow_credentials=True,
