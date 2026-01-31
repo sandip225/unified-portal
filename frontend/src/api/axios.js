@@ -1,10 +1,26 @@
 import axios from 'axios';
 
-// Use environment variable or fallback to localhost
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+// Dynamically determine API base URL based on current protocol
+const getApiBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    
+    // If accessing via HTTPS, use HTTPS API
+    if (protocol === 'https:') {
+      return `https://${hostname}/api`;
+    }
+    // If accessing via HTTP, use HTTP API
+    return `http://${hostname}/api`;
+  }
+  
+  // Fallback for server-side rendering
+  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+};
 
 const api = axios.create({
-  baseURL: baseURL,
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
