@@ -98,11 +98,11 @@ async def start_torrent_power_rpa_automation(
         
         print("✅ All validations passed, starting RPA automation...")
         
-        # Use RPA-based automation for real form filling
-        print("🤖 Starting RPA-based automation...")
+        # Use simple RPA-based automation for testing
+        print("🤖 Starting simple RPA-based automation...")
         
         try:
-            from app.services.torrent_rpa_service import TorrentPowerRPA
+            from app.services.simple_rpa_service import SimpleTorrentRPA
             
             # Prepare the data for RPA
             rpa_data = {
@@ -113,41 +113,38 @@ async def start_torrent_power_rpa_automation(
                 "email": request.email
             }
             
-            print(f"📋 RPA Data: {rpa_data}")
+            print(f"📋 Simple RPA Data: {rpa_data}")
             
-            # Initialize and run RPA
-            rpa = TorrentPowerRPA()
-            result = rpa.run_automation(rpa_data, keep_open=True)
+            # Initialize and run simple RPA
+            rpa = SimpleTorrentRPA()
+            result = rpa.run_automation(rpa_data)
             
-            print(f"📊 RPA Result: {result}")
+            print(f"📊 Simple RPA Result: {result}")
             
             if result.get("success"):
                 return TorrentAutomationResponse(
                     success=True,
-                    message=f"🤖 RPA successfully filled {result.get('total_filled', 0)} fields! Browser kept open for review.",
-                    details="RPA automation completed successfully",
+                    message=f"🤖 Simple RPA test successful! Chrome driver is working.",
+                    details="Simple RPA automation completed successfully",
                     timestamp=datetime.now().isoformat(),
                     fields_filled=result.get("total_filled", 0),
-                    total_fields=5,
+                    total_fields=2,
                     next_steps=[
-                        "✅ RPA automation completed successfully",
-                        "🤖 Browser opened with form auto-filled",
-                        "📝 Form fields filled and highlighted in green",
-                        "👀 Review the filled data for accuracy",
-                        "📤 Click Submit to complete your application",
-                        "🕐 Browser will stay open for 5 minutes"
+                        "✅ Chrome driver is working",
+                        "✅ Selenium automation is functional",
+                        "🔧 Ready for full Torrent Power automation",
+                        "📝 Browser automation confirmed working"
                     ],
-                    automation_details=result.get("filled_fields", []),
-                    screenshots=result.get("screenshots", [])
+                    automation_details=result.get("filled_fields", [])
                 )
             else:
                 return TorrentAutomationResponse(
                     success=False,
-                    message="RPA automation encountered an error.",
-                    details=result.get("error", "Unknown RPA error"),
+                    message="Simple RPA test failed.",
+                    details=result.get("error", "Unknown simple RPA error"),
                     timestamp=datetime.now().isoformat(),
-                    error=result.get("error", "RPA automation failed"),
-                    automation_details=result.get("filled_fields", [])
+                    error=result.get("error", "Simple RPA test failed"),
+                    automation_details=[]
                 )
                 
         except ImportError as e:
