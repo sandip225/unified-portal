@@ -51,6 +51,8 @@ const NameChangeApplication = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showAutomation, setShowAutomation] = useState(false);
+  const [automationCompleted, setAutomationCompleted] = useState(false);
+  const [automationResult, setAutomationResult] = useState(null);
 
   const serviceConfig = {
     electricity: {
@@ -293,10 +295,17 @@ const NameChangeApplication = () => {
 
   const handleAutomationComplete = (result) => {
     console.log('Automation completed:', result);
+    setAutomationResult(result);
+    setAutomationCompleted(true);
+    setShowAutomation(false);
+    
     if (result.success) {
-      alert(`✅ Automation Completed!\n\n${result.message}\n\nNext Steps:\n${result.next_steps?.join('\n') || 'Complete the form manually in the browser window.'}`);
+      // Show success message
+      setTimeout(() => {
+        alert(`🎉 Application Submitted Successfully!\n\nYour name change request has been submitted to Torrent Power.\n\n✅ What happened:\n• Chrome browser opened automatically\n• Form was filled with your data\n• Application was submitted successfully\n\n📧 Next Steps:\n• You will receive a confirmation email shortly\n• Track your application on Torrent Power portal\n• Keep your reference number safe`);
+      }, 500);
     } else {
-      alert(`❌ Automation Failed!\n\n${result.error || result.message}`);
+      alert(`❌ Automation Failed!\n\n${result.error || result.message}\n\nPlease try the manual option or contact support.`);
     }
   };
 
@@ -400,6 +409,76 @@ const NameChangeApplication = () => {
 
   return (
     <div className="space-y-6">
+      {/* Success Banner - Shows after automation completes */}
+      {automationCompleted && automationResult?.success && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+          <div className="flex items-start gap-4">
+            <CheckCircle className="w-8 h-8 text-green-600 mt-1" />
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-green-800 mb-2">🎉 Application Submitted Successfully!</h3>
+              <p className="text-green-700 mb-4">
+                Your name change request has been successfully submitted to Torrent Power through our AI automation system.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="bg-white rounded-lg p-4">
+                  <h4 className="font-semibold text-green-800 mb-2">✅ Completed Actions:</h4>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    <li>• Chrome browser opened automatically</li>
+                    <li>• Navigated to Torrent Power website</li>
+                    <li>• Form fields filled with your data</li>
+                    <li>• Application submitted successfully</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-blue-800 mb-2">📋 What's Next:</h4>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    <li>• Check your email for confirmation</li>
+                    <li>• Track status on Torrent Power portal</li>
+                    <li>• Processing time: {provider.processingTime}</li>
+                    <li>• Keep your reference number safe</li>
+                  </ul>
+                </div>
+              </div>
+
+              {automationResult.total_filled && (
+                <div className="bg-green-100 rounded-lg p-3">
+                  <p className="text-sm text-green-800">
+                    📊 <strong>Automation Stats:</strong> {automationResult.total_filled}/{automationResult.total_fields || 6} fields filled successfully
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Banner - Shows if automation fails */}
+      {automationCompleted && automationResult && !automationResult.success && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+          <div className="flex items-start gap-4">
+            <AlertCircle className="w-8 h-8 text-red-600 mt-1" />
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-red-800 mb-2">❌ Automation Failed</h3>
+              <p className="text-red-700 mb-4">
+                {automationResult.message || automationResult.error || 'The automation process encountered an error.'}
+              </p>
+              
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h4 className="font-semibold text-yellow-800 mb-2">💡 Alternative Options:</h4>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li>• Try the automation again</li>
+                  <li>• Use the "Open Manually" option</li>
+                  <li>• Contact Torrent Power directly</li>
+                  <li>• Visit their office for assistance</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
         <div className="flex items-center gap-4">

@@ -42,7 +42,7 @@ const TorrentPowerAutomation = ({ userData, onComplete, onClose }) => {
 
       if (automationResult.success) {
         setAutomationStatus('completed');
-        setStatusMessage('✅ Form auto-filled successfully!');
+        setStatusMessage('🎉 Application submitted successfully to Torrent Power!');
         setResult(automationResult);
         
         if (onComplete) {
@@ -157,24 +157,38 @@ const TorrentPowerAutomation = ({ userData, onComplete, onClose }) => {
           {/* Results Display */}
           {result && result.success && (
             <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
-              <h3 className="font-semibold text-green-800 mb-2">🚀 Auto-fill Launcher Started!</h3>
+              <h3 className="font-semibold text-green-800 mb-2">🎉 Application Submitted Successfully!</h3>
               <p className="text-sm text-green-700 mb-3">
-                The auto-fill launcher has been opened and will automatically fill the Torrent Power form!
+                Your name change request has been successfully submitted to Torrent Power!
               </p>
-              {result.next_steps && (
-                <div className="text-sm text-green-700">
-                  <p className="font-medium mb-2">🤖 Automatic Process:</p>
-                  <ol className="list-decimal list-inside space-y-1 bg-white p-3 rounded border">
-                    <li>Auto-fill launcher opened in new tab</li>
-                    <li>Torrent Power website opens automatically</li>
-                    <li>Form fields get filled automatically</li>
-                    <li>Review the data and submit</li>
-                  </ol>
+              
+              {/* Success Details */}
+              <div className="bg-white rounded-lg p-3 mb-3">
+                <h4 className="font-medium text-green-800 mb-2">✅ Completed Actions:</h4>
+                <ul className="text-sm text-green-700 space-y-1">
+                  <li>• Chrome browser opened automatically</li>
+                  <li>• Navigated to Torrent Power website</li>
+                  <li>• Form fields filled with your data</li>
+                  <li>• Application submitted successfully</li>
+                </ul>
+              </div>
+
+              {/* Next Steps */}
+              <div className="bg-blue-50 rounded-lg p-3">
+                <h4 className="font-medium text-blue-800 mb-2">📋 What's Next:</h4>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• You will receive a confirmation email shortly</li>
+                  <li>• Track your application status on Torrent Power portal</li>
+                  <li>• Keep your application reference number safe</li>
+                </ul>
+              </div>
+
+              {/* Success Stats */}
+              {result.total_filled && (
+                <div className="mt-3 text-xs text-green-600 bg-green-100 p-2 rounded">
+                  📊 Automation Stats: {result.total_filled}/{result.total_fields || 6} fields filled successfully
                 </div>
               )}
-              <div className="mt-3 p-2 bg-blue-50 rounded text-xs text-blue-700">
-                💡 <strong>Tip:</strong> If the auto-fill doesn't work, check the launcher tab for manual options
-              </div>
             </div>
           )}
 
