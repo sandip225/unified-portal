@@ -47,7 +47,6 @@ const TorrentPowerAutomation = ({ userData, onComplete, onClose }) => {
   };
 
   const startServerAutomation = async () => {
-  const startServerAutomation = async () => {
     try {
       setAutomationStatus('running');
       setStatusMessage('🚀 Starting automation on server...');

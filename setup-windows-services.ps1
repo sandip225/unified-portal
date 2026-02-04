@@ -141,31 +141,31 @@ Write-Host "✅ Firewall configured" -ForegroundColor Green
 Write-Host "📝 Creating management scripts..." -ForegroundColor Yellow
 
 # Start services script
-$startScript = @"
+$startScript = @'
 @echo off
 echo Starting RPA Government Portal Services...
 net start RPA-Backend
 net start RPA-Frontend
 echo Services started!
 pause
-"@
+'@
 
 $startScript | Out-File -FilePath "$projectPath\start-services.bat" -Encoding ASCII
 
 # Stop services script
-$stopScript = @"
+$stopScript = @'
 @echo off
 echo Stopping RPA Government Portal Services...
 net stop RPA-Frontend
 net stop RPA-Backend
 echo Services stopped!
 pause
-"@
+'@
 
 $stopScript | Out-File -FilePath "$projectPath\stop-services.bat" -Encoding ASCII
 
 # Restart services script
-$restartScript = @"
+$restartScript = @'
 @echo off
 echo Restarting RPA Government Portal Services...
 net stop RPA-Frontend
@@ -175,12 +175,12 @@ net start RPA-Backend
 net start RPA-Frontend
 echo Services restarted!
 pause
-"@
+'@
 
 $restartScript | Out-File -FilePath "$projectPath\restart-services.bat" -Encoding ASCII
 
 # Status check script
-$statusScript = @"
+$statusScript = @'
 @echo off
 echo RPA Government Portal Service Status:
 echo =====================================
@@ -194,7 +194,7 @@ echo.
 curl -s http://localhost
 echo.
 pause
-"@
+'@
 
 $statusScript | Out-File -FilePath "$projectPath\check-services.bat" -Encoding ASCII
 
