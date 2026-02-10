@@ -1,5 +1,5 @@
 """
-Documents Router - Upload, OCR, and Auto-fill
+Documents Router - Upload and Storage
 """
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
@@ -10,7 +10,6 @@ from datetime import datetime
 from app.database import get_db
 from app.auth import get_current_user
 from app.models import User, Document
-from app.services.ocr_service import ocr_service
 
 router = APIRouter(prefix="/api/documents", tags=["Documents"])
 
@@ -49,10 +48,8 @@ async def upload_document(
         with open(filepath, "wb") as f:
             f.write(content)
         
-        # Extract data using OCR
+        # No OCR processing for now - just store the document
         extracted_data = {}
-        if file.content_type and file.content_type.startswith('image/'):
-            extracted_data = ocr_service.process_document(content, document_type)
         
         # Save document record in database
         document = Document(

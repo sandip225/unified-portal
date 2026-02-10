@@ -6,7 +6,6 @@ from app.database import get_db
 from app.models import User, Application, ApplicationStatus, ServiceType
 from app.schemas import ApplicationCreate, ApplicationResponse
 from app.auth import get_current_user
-from app.services.direct_automation_service import direct_automation_service
 
 router = APIRouter(prefix="/api/applications", tags=["Applications"])
 

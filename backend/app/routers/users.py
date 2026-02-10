@@ -5,7 +5,6 @@ from app.database import get_db
 from app.models import User, Document, DocumentType
 from app.schemas import UserResponse, UserUpdate, DocumentResponse, AutoFillData
 from app.auth import get_current_user
-from app.services.ocr_service import ocr_service
 import uuid
 
 router = APIRouter(prefix="/api/users", tags=["Users"])
@@ -38,22 +37,11 @@ async def upload_document(
     # For now, save locally
     file_url = f"/uploads/{unique_filename}"
     
-    # Read file content for OCR
+    # Read file content
     content = await file.read()
     
-    # Extract data using OCR based on document type
+    # For now, no OCR processing - just store the document
     extracted_data = {}
-    doc_type_mapping = {
-        DocumentType.AADHAAR: "aadhaar",
-        DocumentType.PAN: "pan",
-        DocumentType.ELECTRICITY_BILL: "electricity_bill",
-        DocumentType.GAS_BILL: "gas_bill",
-        DocumentType.PROPERTY_DOC: "property_doc",
-    }
-    
-    ocr_type = doc_type_mapping.get(doc_type)
-    if ocr_type:
-        extracted_data = ocr_service.process_document(content, ocr_type)
     
     # Create document record
     document = Document(
