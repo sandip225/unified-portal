@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
-import { Zap, Flame, Droplets, Building, ExternalLink, Shield } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Zap, Flame, Droplets, Building, ExternalLink, Shield, ArrowLeft, Home } from 'lucide-react';
 
 const Services = () => {
+  const navigate = useNavigate();
+  
   const services = [
     {
       id: 'electricity',
@@ -75,6 +77,27 @@ const Services = () => {
 
   return (
     <div className="space-y-6">
+      {/* Back Button & Breadcrumb */}
+      <div className="flex items-center justify-between">
+        <div>
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 mb-2 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">Back</span>
+          </button>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <Link to="/" className="hover:text-blue-600 flex items-center gap-1">
+              <Home className="w-3 h-3" />
+              Dashboard
+            </Link>
+            <span>/</span>
+            <span className="text-gray-800 font-medium">Services</span>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
         <div className="flex items-center gap-4">

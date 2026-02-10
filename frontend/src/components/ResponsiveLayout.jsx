@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import Layout from './Layout';
 import MobileLayout from './MobileLayout';
 import Dashboard from '../pages/Dashboard';
-import MobileDashboard from '../pages/MobileDashboard';
 import { useLocation } from 'react-router-dom';
 
 const ResponsiveLayout = () => {
@@ -20,15 +19,7 @@ const ResponsiveLayout = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Use mobile dashboard on home page for mobile devices
-  if (isMobile && location.pathname === '/') {
-    return (
-      <MobileLayout>
-        <MobileDashboard />
-      </MobileLayout>
-    );
-  }
-
+  // Use regular dashboard for all devices
   return isMobile ? <MobileLayout /> : <Layout />;
 };
 

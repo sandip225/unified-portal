@@ -4,6 +4,12 @@ import ResponsiveLayout from './components/ResponsiveLayout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import NewHome from './pages/NewHome';
+import UtilityServices from './pages/UtilityServices';
+import DocumentUploadFlow from './pages/DocumentUploadFlow';
+import FinalFormPage from './pages/FinalFormPage';
+import CompanyFormation from './pages/CompanyFormation';
+import GovernmentGrants from './pages/GovernmentGrants';
 import Profile from './pages/Profile';
 import Documents from './pages/Documents';
 import Services from './pages/Services';
@@ -76,6 +82,25 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/test-automation" element={<TestAutomation />} />
           <Route path="/direct-rpa-test" element={<TestAutomationDirect />} />
+          
+          {/* New Document-First Flow Routes */}
+          <Route path="/new-home" element={<NewHome />} />
+          
+          {/* Utility Services Routes */}
+          <Route path="/utility-services" element={<UtilityServices />} />
+          <Route path="/utility-services/:serviceType/:providerId/document-upload" element={<DocumentUploadFlow />} />
+          <Route path="/utility-services/:serviceType/:providerId/final-form" element={<FinalFormPage />} />
+          
+          {/* Company Formation Routes */}
+          <Route path="/company-formation" element={<CompanyFormation />} />
+          <Route path="/company-formation/:serviceId/document-upload" element={<DocumentUploadFlow />} />
+          <Route path="/company-formation/:serviceId/final-form" element={<FinalFormPage />} />
+          
+          {/* Government Grants Routes */}
+          <Route path="/government-grants" element={<GovernmentGrants />} />
+          <Route path="/government-grants/:categoryId" element={<GovernmentGrants />} />
+          <Route path="/government-grants/find-grant" element={<DocumentUploadFlow />} />
+          
           <Route path="/" element={
             <ProtectedRoute>
               <ResponsiveLayout />

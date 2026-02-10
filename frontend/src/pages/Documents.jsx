@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { Upload, FileText, Check, X } from 'lucide-react';
+import { Upload, FileText, Check, X, ArrowLeft, Home } from 'lucide-react';
 
 const Documents = () => {
+  const navigate = useNavigate();
   const [documents, setDocuments] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [selectedType, setSelectedType] = useState('aadhaar');
@@ -51,8 +53,29 @@ const Documents = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">My Documents</h2>
+    <div className="space-y-6">
+      {/* Back Button & Breadcrumb */}
+      <div className="flex items-center justify-between">
+        <div>
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 mb-2 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">Back</span>
+          </button>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <Link to="/" className="hover:text-blue-600 flex items-center gap-1">
+              <Home className="w-3 h-3" />
+              Dashboard
+            </Link>
+            <span>/</span>
+            <span className="text-gray-800 font-medium">My Documents</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 className="text-2xl font-bold text-gray-800">My Documents</h2>
 
       {/* Upload Section */}
       <div className="bg-white rounded-xl shadow-md p-6 mb-6">

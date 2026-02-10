@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { FileText, Clock, CheckCircle, XCircle, AlertCircle, ArrowRight, Filter, Plus, Zap, Flame, Droplets, Building } from 'lucide-react';
+import { FileText, Clock, CheckCircle, XCircle, AlertCircle, ArrowRight, Filter, Plus, Zap, Flame, Droplets, Building, ArrowLeft, Home } from 'lucide-react';
 
 const Applications = () => {
+  const navigate = useNavigate();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -77,6 +78,27 @@ const Applications = () => {
 
   return (
     <div className="space-y-6">
+      {/* Back Button & Breadcrumb */}
+      <div className="flex items-center justify-between">
+        <div>
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 mb-2 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">Back</span>
+          </button>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <Link to="/" className="hover:text-blue-600 flex items-center gap-1">
+              <Home className="w-3 h-3" />
+              Dashboard
+            </Link>
+            <span>/</span>
+            <span className="text-gray-800 font-medium">My Applications</span>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
         <div className="flex items-center justify-between flex-wrap gap-4">

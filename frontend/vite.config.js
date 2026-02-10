@@ -45,6 +45,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp}'],
         skipWaiting: true,
         clientsClaim: true,
+        navigateFallback: '/index.html',
+        navigateFallbackAllowlist: [/^(?!\/(api|demo-govt)).*/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\..*/i,

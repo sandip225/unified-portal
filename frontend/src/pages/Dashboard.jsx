@@ -1,12 +1,11 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { 
-  Zap, Flame, Droplets, Building, ArrowRight, FileText, 
+  Zap, Briefcase, Gift, ArrowRight, FileText, 
   CheckCircle, Clock, User,
-  MapPin, Phone, Mail
+  MapPin, Phone, Mail, MessageCircle, ChevronDown, ChevronUp
 } from 'lucide-react';
 
 // Utility functions to mask user information
@@ -36,6 +35,7 @@ const Dashboard = () => {
     completed: 0
   });
   const [loading, setLoading] = useState(true);
+  const [expandedService, setExpandedService] = useState(null); // Track which service is expanded
 
   useEffect(() => {
     fetchStats();
@@ -65,42 +65,79 @@ const Dashboard = () => {
     }
   };
 
-  const services = [
+  // Main service categories
+  const mainServices = [
     {
-      id: 'electricity',
-      name: 'Electricity',
-      nameHindi: 'बिजली',
+      id: 'utility-name-change',
+      title: 'Utility Name Change',
+      titleHindi: 'उपयोगिता नाम परिवर्तन',
+      description: 'Change name in utility bills',
+      descriptionHindi: 'उपयोगिता बिलों में नाम बदलें',
       icon: Zap,
-      gradient: 'from-amber-400 to-orange-500',
-      link: '/services/electricity',
-      providers: ['Torrent Power', 'PGVCL', 'UGVCL', 'MGVCL', 'DGVCL']
+      color: 'from-yellow-500 to-orange-500',
+      bgColor: 'bg-yellow-50',
+      borderColor: 'border-yellow-200',
+      services: [
+        { name: 'Electricity', count: 5, icon: '⚡' },
+        { name: 'Gas', count: 2, icon: '🔥' },
+        { name: 'Water', count: 1, icon: '💧' },
+        { name: 'Property', count: 1, icon: '🏢' }
+      ],
+      route: '/utility-services'
     },
     {
-      id: 'gas',
-      name: 'Gas',
-      nameHindi: 'गैस',
-      icon: Flame,
-      gradient: 'from-red-400 to-rose-600',
-      link: '/services/gas',
-      providers: ['Adani Gas', 'Gujarat Gas', 'Sabarmati Gas']
+      id: 'company-formation',
+      title: 'New Company Formation',
+      titleHindi: 'नई कंपनी गठन',
+      description: 'Register your business',
+      descriptionHindi: 'अपना व्यवसाय पंजीकृत करें',
+      icon: Briefcase,
+      color: 'from-blue-500 to-purple-500',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-200',
+      services: [
+        { name: 'GST Registration', icon: '📋' },
+        { name: 'TAN', icon: '🔢' },
+        { name: 'PAN', icon: '🆔' },
+        { name: 'DSC', icon: '🔐' }
+      ],
+      route: '/company-formation'
     },
     {
-      id: 'water',
-      name: 'Water',
-      nameHindi: 'पानी',
-      icon: Droplets,
-      gradient: 'from-cyan-400 to-blue-500',
-      link: '/services/water',
-      providers: ['AMC', 'SMC', 'VMC', 'GWSSB']
+      id: 'govt-grants',
+      title: 'Government Grants',
+      titleHindi: 'सरकारी अनुदान',
+      description: 'Find grants for your business',
+      descriptionHindi: 'अपने व्यवसाय के लिए अनुदान खोजें',
+      icon: Gift,
+      color: 'from-green-500 to-teal-500',
+      bgColor: 'bg-green-50',
+      borderColor: 'border-green-200',
+      services: [
+        { name: 'Find Grant for Me', icon: '🔍' },
+        { name: 'Startup Grants', icon: '🚀' },
+        { name: 'MSME Grants', icon: '🏭' },
+        { name: 'Export Grants', icon: '🌍' }
+      ],
+      route: '/government-grants'
+    }
+  ];
+
+  const features = [
+    {
+      icon: FileText,
+      title: 'Document Upload',
+      description: 'Upload documents once, use for multiple services'
     },
     {
-      id: 'property',
-      name: 'Property',
-      nameHindi: 'संपत्ति',
-      icon: Building,
-      gradient: 'from-emerald-400 to-green-600',
-      link: '/services/property',
-      providers: ['AnyRoR', 'e-Dhara', 'e-Nagar']
+      icon: CheckCircle,
+      title: 'AI Auto-fill',
+      description: 'AI extracts data from documents automatically'
+    },
+    {
+      icon: Zap,
+      title: 'Quick Processing',
+      description: 'Complete applications in 5-10 minutes'
     }
   ];
 
@@ -212,41 +249,113 @@ const Dashboard = () => {
         </Link>
       </div>
 
-      {/* Services Section */}
+      {/* Main Services Section */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-800">Services</h2>
-          <Link to="/services" className="text-sm text-blue-600 hover:underline">View All</Link>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Choose Your Service</h2>
+          <p className="text-gray-600">अपनी सेवा चुनें</p>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service) => {
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {mainServices.map((service) => {
             const Icon = service.icon;
             return (
-              <div
+              <Link
                 key={service.id}
-                className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+                to={service.route}
+                className={`${service.bgColor} border-2 ${service.borderColor} rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group`}
               >
-                <div className={`bg-gradient-to-r ${service.gradient} p-5`}>
-                  <div className="flex items-center gap-3">
-                    <div className="bg-white/25 backdrop-blur-sm p-2 rounded-lg">
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-white">{service.name}</h3>
-                      <p className="text-white/80 text-xs">{service.nameHindi}</p>
-                    </div>
-                  </div>
+                {/* Icon */}
+                <div className={`w-20 h-20 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                  <Icon className="w-10 h-10 text-white" />
                 </div>
-                <div className="p-4">
-                  <p className="text-xs text-gray-400">
-                    Providers: {service.providers.slice(0, 2).join(', ')}
-                    {service.providers.length > 2 && ` +${service.providers.length - 2} more`}
-                  </p>
+
+                {/* Title */}
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  {service.title}
+                </h3>
+                <p className="text-gray-600 mb-1">{service.titleHindi}</p>
+                
+                {/* Description */}
+                <p className="text-gray-700 mb-1">{service.description}</p>
+                <p className="text-sm text-gray-500 mb-6">{service.descriptionHindi}</p>
+
+                {/* Services List */}
+                <div className="space-y-2 mb-6">
+                  {service.services.slice(0, 4).map((subService, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-sm text-gray-700">
+                      <span className="text-lg">{subService.icon}</span>
+                      <span>{subService.name}</span>
+                      {subService.count && (
+                        <span className="text-xs text-gray-500">({subService.count})</span>
+                      )}
+                    </div>
+                  ))}
+                  {service.services.length > 4 && (
+                    <p className="text-sm text-gray-500 italic">
+                      +{service.services.length - 4} more services
+                    </p>
+                  )}
                 </div>
+
+                {/* CTA */}
+                <div className="flex items-center justify-between">
+                  <span className={`text-transparent bg-clip-text bg-gradient-to-r ${service.color} font-semibold`}>
+                    Get Started
+                  </span>
+                  <ArrowRight className="w-5 h-5 text-blue-600 group-hover:translate-x-2 transition-transform" />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* How It Works */}
+      <div className="bg-white rounded-2xl shadow-lg p-8">
+        <h3 className="text-2xl font-bold text-gray-800 mb-8 text-center">
+          How It Works
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((feature, idx) => {
+            const Icon = feature.icon;
+            return (
+              <div key={idx} className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Icon className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                  {feature.title}
+                </h4>
+                <p className="text-gray-600 text-sm">
+                  {feature.description}
+                </p>
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* Process Flow */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
+        <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Simple 4-Step Process
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[
+            { step: '1', title: 'Upload Documents', desc: 'Upload required documents' },
+            { step: '2', title: 'AI Extraction', desc: 'AI extracts data automatically' },
+            { step: '3', title: 'Fill Remaining', desc: 'Fill only missing details' },
+            { step: '4', title: 'Submit', desc: 'Application auto-submitted' }
+          ].map((item, idx) => (
+            <div key={idx} className="text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+                {item.step}
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-1">{item.title}</h4>
+              <p className="text-sm text-gray-600">{item.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
