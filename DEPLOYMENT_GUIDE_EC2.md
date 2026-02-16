@@ -227,10 +227,10 @@ docker-compose logs --tail=100
 ```
 
 ### 7.3 Access in Browser
-- **Frontend**: http://18.207.167.97
-- **Backend API**: http://18.207.167.97:8000
-- **API Docs**: http://18.207.167.97:8000/docs
-- **Health Check**: http://18.207.167.97/health
+- **Frontend**: http://13.127.12.126
+- **Backend API**: http://13.127.12.126:8000
+- **API Docs**: http://13.127.12.126:8000/docs
+- **Health Check**: http://13.127.12.126/health
 
 ---
 
@@ -372,7 +372,7 @@ sudo nano /etc/nginx/sites-available/gujarat-portal
 ```nginx
 server {
     listen 80;
-    server_name 18.207.167.97;
+    server_name 13.127.12.126;
 
     # Frontend
     location / {
@@ -385,7 +385,7 @@ EOF
 
 # Frontend .env.production
 cat > frontend/.env.production << 'EOF'
-VITE_API_URL=http://18.207.167.97:8000
+VITE_API_URL=http://13.127.12.126:8000
 VITE_APP_NAME=Gujarat Unified Services Portal
 EOF
 ```
@@ -425,10 +425,10 @@ HOST=0.0.0.0
 PORT=8000
 
 # Frontend Configuration
-FRONTEND_URL=http://18.207.167.97
+FRONTEND_URL=http://13.127.12.126
 
 # CORS Settings
-BACKEND_CORS_ORIGINS=["http://18.207.167.97","http://localhost:3003"]
+BACKEND_CORS_ORIGINS=["http://13.127.12.126","http://localhost:3003"]
 
 # Environment
 ENVIRONMENT=production
@@ -478,7 +478,7 @@ git clone https://github.com/Vaidehip0407/gujarat-unified-services-port main
 
 ### 2.1 Connect to EC2
 ```bash
-ssh -i your-key.pem ubuntu@18.207.167.97
+ssh -i your-key.pem ubuntu@13.127.12.126
 ```
 
 ### 2.2 Update System
@@ -530,8 +530,8 @@ gitHub**: https://github.com/Vaidehip0407/gujarat-unified-services-portal
 - **Branch**: main
 
 ### EC2 Instance
-- **IP**: 18.207.167.97
-- **Region**: us-east-1 (assumed)
+- **IP**: 13.127.12.126
+- **Region**: ap-south-1 (Mumbai)
 - **OS**: Ubuntu 22.04 LTS (recommended)
 
 ---

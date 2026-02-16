@@ -38,7 +38,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://18.207.167.97:8000
+        - VITE_API_URL=http://13.127.12.126:8000
     container_name: gujarat-portal-frontend
     ports:
       - "3003:80"

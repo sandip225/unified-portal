@@ -50,15 +50,15 @@
 ## 🚀 EC2 Deployment Steps
 
 ### Instance Details
-- **IP Address**: 18.207.167.97
-- **Region**: us-east-1
+- **IP Address**: 13.127.12.126
+- **Region**: ap-south-1 (Mumbai)
 - **OS**: Ubuntu 22.04 LTS (recommended)
 
 ### Quick Deployment (Copy-Paste Commands)
 
 #### 1. Connect to EC2
 ```bash
-ssh -i your-key.pem ubuntu@18.207.167.97
+ssh -i your-key.pem ubuntu@13.127.12.126
 ```
 
 #### 2. Install Docker & Dependencies
@@ -80,7 +80,7 @@ sudo apt install git nginx -y
 
 # Logout and login again
 exit
-ssh -i your-key.pem ubuntu@18.207.167.97
+ssh -i your-key.pem ubuntu@13.127.12.126
 ```
 
 #### 3. Clone & Deploy
@@ -95,14 +95,14 @@ cat > backend/.env.prod << 'EOF'
 APP_NAME=Gujarat Unified Services Portal
 DATABASE_URL=sqlite:///./unified_portal.db
 SECRET_KEY=CHANGE_THIS_SECURE_KEY_12345
-FRONTEND_URL=http://18.207.167.97
-BACKEND_CORS_ORIGINS=["http://18.207.167.97"]
+FRONTEND_URL=http://13.127.12.126
+BACKEND_CORS_ORIGINS=["http://13.127.12.126"]
 ENVIRONMENT=production
 DEBUG=false
 EOF
 
 cat > frontend/.env.production << 'EOF'
-VITE_API_URL=http://18.207.167.97:8000
+VITE_API_URL=http://13.127.12.126:8000
 VITE_APP_NAME=Gujarat Unified Services Portal
 EOF
 
@@ -120,7 +120,7 @@ docker-compose ps
 sudo tee /etc/nginx/sites-available/gujarat-portal > /dev/null << 'EOF'
 server {
     listen 80;
-    server_name 18.207.167.97;
+    server_name 13.127.12.126;
 
     location / {
         proxy_pass http://localhost:3003;
@@ -162,7 +162,7 @@ curl http://localhost:8000/health
 curl http://localhost:3003
 
 # From your machine
-curl http://18.207.167.97/health
+curl http://13.127.12.126/health
 ```
 
 ---
@@ -170,13 +170,13 @@ curl http://18.207.167.97/health
 ## 🌐 Access URLs (After Deployment)
 
 ### Main URLs
-- **Frontend**: http://18.207.167.97
-- **Backend API**: http://18.207.167.97:8000
-- **API Documentation**: http://18.207.167.97:8000/docs
-- **Health Check**: http://18.207.167.97/health
+- **Frontend**: http://13.127.12.126
+- **Backend API**: http://13.127.12.126:8000
+- **API Documentation**: http://13.127.12.126:8000/docs
+- **Health Check**: http://13.127.12.126/health
 
 ### Test in Browser
-1. Open: http://18.207.167.97
+1. Open: http://13.127.12.126
 2. Register/Login
 3. Test all features
 4. Verify navigation works
@@ -198,7 +198,7 @@ Custom TCP      TCP         3003    0.0.0.0/0
 
 ### How to Configure
 1. Go to AWS EC2 Console
-2. Select instance (18.207.167.97)
+2. Select instance (13.127.12.126)
 3. Security → Security Groups
 4. Edit Inbound Rules
 5. Add above rules
@@ -241,7 +241,7 @@ Custom TCP      TCP         3003    0.0.0.0/0
 
 ```bash
 # SSH to EC2
-ssh -i your-key.pem ubuntu@18.207.167.97
+ssh -i your-key.pem ubuntu@13.127.12.126
 
 # Navigate to project
 cd /home/ubuntu/gujarat-unified-services-portal
@@ -355,7 +355,7 @@ All deployment documentation available in repository:
 ---
 
 **Repository**: https://github.com/Vaidehip0407/gujarat-unified-services-portal
-**EC2 IP**: 18.207.167.97
+**EC2 IP**: 13.127.12.126
 **Status**: Ready for Deployment
 **Estimated Time**: 30-45 minutes
 

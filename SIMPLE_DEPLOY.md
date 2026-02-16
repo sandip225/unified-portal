@@ -25,7 +25,7 @@ Simple and direct!
 
 ### 1. Connect to EC2
 ```bash
-ssh -i your-key.pem ubuntu@18.207.167.97
+ssh -i your-key.pem ubuntu@13.127.12.126
 ```
 
 ### 2. Install Docker (if not installed)
@@ -41,7 +41,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 # Logout and login again
 exit
-ssh -i your-key.pem ubuntu@18.207.167.97
+ssh -i your-key.pem ubuntu@13.127.12.126
 ```
 
 ### 3. Clone and Deploy
@@ -64,7 +64,7 @@ docker-compose ps
 
 ```bash
 # SSH to EC2
-ssh -i your-key.pem ubuntu@18.207.167.97
+ssh -i your-key.pem ubuntu@13.127.12.126
 cd gujarat-unified-services-portal
 
 # Pull latest code
@@ -105,10 +105,10 @@ curl http://localhost:80
 
 ## 🌐 Access URLs
 
-- **Frontend**: http://18.207.167.97
-- **Backend API**: http://18.207.167.97:8000
-- **API Docs**: http://18.207.167.97:8000/docs
-- **Health Check**: http://18.207.167.97:8000/health
+- **Frontend**: http://13.127.12.126
+- **Backend API**: http://13.127.12.126:8000
+- **API Docs**: http://13.127.12.126:8000/docs
+- **Health Check**: http://13.127.12.126:8000/health
 
 ---
 
@@ -191,8 +191,8 @@ docker-compose up -d
 - [ ] Repository cloned
 - [ ] Containers built and running
 - [ ] Ports 80 and 8000 open in Security Group
-- [ ] Frontend accessible at http://18.207.167.97
-- [ ] Backend accessible at http://18.207.167.97:8000
+- [ ] Frontend accessible at http://13.127.12.126
+- [ ] Backend accessible at http://13.127.12.126:8000
 - [ ] Can register/login
 - [ ] All features working
 
