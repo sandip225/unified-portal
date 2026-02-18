@@ -29,7 +29,7 @@ FROM nginx:alpine
 # Copy built files to nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Create default nginx config
+# Create nginx config that handles base path
 RUN echo 'server { \
     listen 80; \
     server_name localhost; \
@@ -37,6 +37,10 @@ RUN echo 'server { \
     index index.html; \
     location / { \
         try_files $uri $uri/ /index.html; \
+    } \
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ { \
+        expires 1y; \
+        add_header Cache-Control "public, immutable"; \
     } \
 }' > /etc/nginx/conf.d/default.conf
 

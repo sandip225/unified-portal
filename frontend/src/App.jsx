@@ -92,6 +92,7 @@ function App() {
       <OfflineIndicator />
       <InstallPWA />
       <BrowserRouter
+        basename="/portal"
         future={{
           v7_startTransition: true,
           v7_relativeSplatPath: true
