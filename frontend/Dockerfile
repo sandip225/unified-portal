@@ -30,7 +30,9 @@ FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copy public assets to dist root for base path compatibility
-COPY --from=builder /app/public/*.{jpg,jpeg,png,gif,svg,webp} /usr/share/nginx/html/ 2>/dev/null || true
+COPY --from=builder /app/public/*.webp /usr/share/nginx/html/ 2>/dev/null || true
+COPY --from=builder /app/public/*.png /usr/share/nginx/html/ 2>/dev/null || true
+COPY --from=builder /app/public/*.jpg /usr/share/nginx/html/ 2>/dev/null || true
 
 # Create nginx config that handles base path
 RUN echo 'server { \
