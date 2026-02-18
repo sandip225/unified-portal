@@ -3,7 +3,7 @@ import { useParams, useSearchParams, Link } from 'react-router-dom';
 import {
   Zap, Flame, Droplets, Building, ArrowLeft, Upload,
   User, Phone, Mail, MapPin, FileText, Calendar,
-  AlertCircle, CheckCircle, Info, Sparkles
+  AlertCircle, CheckCircle, Info, Sparkles, Play
 } from 'lucide-react';
 import axios from '../api/axios';
 
@@ -232,19 +232,39 @@ const NameChangeApplication = () => {
       const requiredFields = ['serviceNumber', 'tNumber', 'mobile', 'email', 'confirmEmail'];
 
       requiredFields.forEach(field => {
-        if (!formData[field]) {
+        const value = formData[field];
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
           newErrors[field] = 'This field is required';
         }
       });
 
+      // Email validation
+      if (formData.email && formData.email.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email.trim())) {
+          newErrors.email = 'Please enter a valid email address';
+        }
+      }
+
       // Email confirmation validation
-      if (formData.email && formData.confirmEmail && formData.email !== formData.confirmEmail) {
-        newErrors.confirmEmail = 'Email addresses do not match';
+      if (formData.email && formData.confirmEmail) {
+        if (formData.email.trim() !== formData.confirmEmail.trim()) {
+          newErrors.confirmEmail = 'Email addresses do not match';
+        }
+      }
+
+      // Mobile validation
+      if (formData.mobile && formData.mobile.trim()) {
+        const mobileRegex = /^[0-9]{10}$/;
+        if (!mobileRegex.test(formData.mobile.trim())) {
+          newErrors.mobile = 'Please enter a valid 10-digit mobile number';
+        }
       }
     } else {
       // Original validation for other providers
       provider.requiredFields.forEach(field => {
-        if (!formData[field]) {
+        const value = formData[field];
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
           newErrors[field] = 'This field is required';
         }
       });
@@ -262,13 +282,20 @@ const NameChangeApplication = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    console.log('Form submitted with data:', formData);
+    console.log('Provider ID:', providerId);
 
     if (!validateForm()) {
+      console.log('Validation failed with errors:', errors);
       return;
     }
 
+    console.log('Validation passed, proceeding...');
+
     // Check if this is Torrent Power with AI automation
     if (providerId === 'torrent-power' && provider.aiSupported) {
+      console.log('Opening automation modal...');
       setShowAutomation(true);
       return;
     }
