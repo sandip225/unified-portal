@@ -931,15 +931,11 @@ const NameChangeApplication = () => {
                     <span className="text-gray-600 font-medium text-sm">Email</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${automationResult.success ? 'bg-green-500' : 'bg-red-500'}`}>
-                      {automationResult.success ? (
-                        <CheckCircle className="w-5 h-5 text-white" />
-                      ) : (
-                        <AlertCircle className="w-5 h-5 text-white" />
-                      )}
+                    <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-xs">✕</span>
                     </div>
-                    <span className={`font-medium text-sm px-2 py-1 rounded ${automationResult.success ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>
-                      Form filled successfully
+                    <span className={`font-medium text-sm px-2 py-1 rounded border-2 border-red-500 bg-red-50 text-red-700`}>
+                      Form has not been Submitted
                     </span>
                   </div>
                 </div>
