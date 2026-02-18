@@ -9,8 +9,8 @@ const getApiBaseUrl = () => {
     return 'http://localhost:8002/api';
   }
   
-  // Production - use same hostname with port 8002
-  return `http://${hostname}:8002/api`;
+  // Production - use nginx proxy path instead of direct port
+  return `http://${hostname}/api`;
 };
 
 const api = axios.create({
