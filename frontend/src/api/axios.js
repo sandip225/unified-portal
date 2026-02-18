@@ -6,11 +6,11 @@ const getApiBaseUrl = () => {
   
   // Development
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'http://localhost:8000/api';
+    return 'http://localhost:8002/api';
   }
   
-  // Production - use same hostname with port 8000
-  return `http://${hostname}:8000/api`;
+  // Production - use same hostname with port 8002
+  return `http://${hostname}:8002/api`;
 };
 
 const api = axios.create({
