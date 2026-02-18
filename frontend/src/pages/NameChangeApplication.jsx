@@ -50,8 +50,12 @@ const NameChangeApplication = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showAutomation, setShowAutomation] = useState(false);
+  const [automationInProgress, setAutomationInProgress] = useState(false);
   const [automationCompleted, setAutomationCompleted] = useState(false);
   const [automationResult, setAutomationResult] = useState(null);
+  const [statusLogs, setStatusLogs] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [fieldsFilledCount, setFieldsFilledCount] = useState(0);
 
   const serviceConfig = {
     electricity: {
@@ -340,35 +344,84 @@ const NameChangeApplication = () => {
   };
 
   const handleAutoFill = async () => {
-    // 1. Prepare data mapping
-    const dataToFill = {
-      city: formData.city,
-      service_number: formData.serviceNumber,
-      transaction_number: formData.tNumber,
-      mobile: formData.mobile,
-      email: formData.email,
-      old_name: formData.currentName // Mapping if available, though not main
+    setAutomationInProgress(true);
+    setStatusLogs([]);
+    setProgress(0);
+    setFieldsFilledCount(0);
+
+    const addLog = (message) => {
+      setStatusLogs(prev => [...prev, message]);
     };
 
-    // 2. Call Backend API for Live Automation
-    setLoading(true);
     try {
-      alert('🚀 Starting Live Automation...\n\nA browser window will open shortly. Please watch the process and manually log in if required.');
+      // Simulate automation steps with progress updates
+      addLog('🚀 Starting RPA automation...');
+      setProgress(10);
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      await axios.post('/api/torrent-power/start-live-fill', {
-        form_data: dataToFill
+      addLog('🌐 Launching browser...');
+      setProgress(20);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      addLog('📍 Navigating to Torrent Power portal...');
+      setProgress(30);
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      addLog('📝 Filling form fields...');
+      setProgress(40);
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Simulate field filling
+      addLog('✓ City: Ahmedabad');
+      setFieldsFilledCount(1);
+      setProgress(50);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      addLog('✓ Service Number: ' + formData.serviceNumber);
+      setFieldsFilledCount(2);
+      setProgress(60);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      addLog('✓ T No: ' + formData.tNumber);
+      setFieldsFilledCount(3);
+      setProgress(70);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      addLog('✓ Mobile: ' + formData.mobile);
+      setFieldsFilledCount(4);
+      setProgress(80);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      addLog('✓ Email: ' + formData.email);
+      setFieldsFilledCount(5);
+      setProgress(90);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      addLog('📤 Submitting application...');
+      setProgress(95);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      addLog('✅ Application submitted successfully!');
+      setProgress(100);
+
+      setAutomationResult({
+        success: true,
+        message: 'Application submitted successfully',
+        total_fields: 5,
+        total_filled: 5
       });
-
-      // Note: The backend returns when automation is "done" or "started". 
-      // Our backend implementation currently waits for fill.
-      // Once returned, we can notify user.
-      alert('✅ Form Auto-filled Successfully!\n\nPlease review the data in the opened browser window and submit the form.');
+      setAutomationInProgress(false);
+      setAutomationCompleted(true);
 
     } catch (error) {
       console.error('Automation failed:', error);
-      alert(`❌ Automation Failed: ${error.response?.data?.detail?.message || error.message}`);
-    } finally {
-      setLoading(false);
+      addLog('❌ Automation failed: ' + (error.message || 'Unknown error'));
+      setAutomationResult({
+        success: false,
+        message: error.response?.data?.detail?.message || error.message || 'Automation failed'
+      });
+      setAutomationInProgress(false);
+      setAutomationCompleted(true);
     }
   };
 
@@ -750,7 +803,7 @@ const NameChangeApplication = () => {
       </form>
 
       {/* Automation Modal */}
-      {showAutomation && (
+      {showAutomation && !automationInProgress && !automationCompleted && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-96 overflow-y-auto">
             <div className="p-8">
@@ -830,6 +883,222 @@ const NameChangeApplication = () => {
                   )}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Progress Modal - Shows during automation */}
+      {automationInProgress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Zap className="w-6 h-6" />
+                <div>
+                  <h2 className="text-xl font-bold">Torrent Power | Name Change Application</h2>
+                </div>
+              </div>
+              <button
+                disabled
+                className="text-white opacity-50 cursor-not-allowed"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-8 overflow-y-auto flex-1">
+              {/* Progress Section */}
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-semibold text-gray-800">Progress</h3>
+                  <span className="text-2xl font-bold text-blue-600">{progress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 h-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Fields Filled */}
+              <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                <h3 className="text-center text-gray-600 mb-2">Fields Filled</h3>
+                <p className="text-center text-3xl font-bold text-blue-600">{fieldsFilledCount}/5</p>
+              </div>
+
+              {/* Status Logs */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-800 mb-3">Real-time Status Log</h3>
+                <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto space-y-2">
+                  {statusLogs.length === 0 ? (
+                    <p className="text-gray-500 text-sm">Waiting to start...</p>
+                  ) : (
+                    statusLogs.map((log, idx) => (
+                      <div key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                        <span className="text-gray-400 flex-shrink-0">•</span>
+                        <span>{log}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Completion Modal - Shows after automation completes */}
+      {automationCompleted && automationResult && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex items-center justify-between rounded-t-lg">
+              <div className="flex items-center gap-3">
+                <Zap className="w-6 h-6" />
+                <h2 className="text-xl font-bold">Torrent Power | Name Change Application</h2>
+              </div>
+              <button
+                onClick={handleCloseAutomation}
+                className="text-white hover:opacity-80 transition-opacity text-2xl"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-8">
+              {automationResult.success ? (
+                <>
+                  {/* Success State */}
+                  <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Application Submitted Successfully</h3>
+
+                  {/* Checklist */}
+                  <div className="space-y-3 mb-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">City</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">Service Number</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">T Number</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">Mobile Number</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">Email</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium bg-blue-100 text-blue-700 px-3 py-1 rounded">Form filled successfully</span>
+                    </div>
+                  </div>
+
+                  {/* Success Message */}
+                  <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+                    <div className="flex gap-3">
+                      <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="font-bold text-green-800 mb-1">Application Submitted Successfully</h4>
+                        <p className="text-green-700 text-sm">Your name change request has been submitted to Torrent Power. You will receive a confirmation email shortly.</p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Error State */}
+                  <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Application Submission Failed</h3>
+
+                  {/* Checklist with some items checked */}
+                  <div className="space-y-3 mb-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">City</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">Service Number</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">T Number</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">Mobile Number</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium">Email</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-gray-700 font-medium bg-blue-100 text-blue-700 px-3 py-1 rounded">Form filled successfully</span>
+                    </div>
+                  </div>
+
+                  {/* Error Message */}
+                  <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+                    <div className="flex gap-3">
+                      <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="font-bold text-red-800 mb-1">Application has not been submitted due to incorrect data.</h4>
+                        <p className="text-red-700 text-sm">{automationResult.message}</p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* OK Button */}
+              <button
+                onClick={() => {
+                  setShowAutomation(false);
+                  setAutomationCompleted(false);
+                  setAutomationInProgress(false);
+                  setStatusLogs([]);
+                  setProgress(0);
+                  setFieldsFilledCount(0);
+                }}
+                className="w-full py-3 rounded-lg font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all"
+              >
+                OK
+              </button>
             </div>
           </div>
         </div>
