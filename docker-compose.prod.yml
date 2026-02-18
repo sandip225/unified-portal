@@ -6,19 +6,19 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: gujarat-portal-backend
+    container_name: unified-portal-backend
     ports:
-      - "8000:8000"
+      - "8001:8000"
     env_file:
       - ./backend/.env.prod
     environment:
       - PYTHONPATH=/app
     volumes:
-      - backend-db:/app
+      - backend-db:/app/data
       - ./backend/screenshots:/app/screenshots
       - ./backend/uploads:/app/uploads
     networks:
-      - gujarat-portal-network
+      - unified-portal-network
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -38,45 +38,18 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://18.191.185.246:8000
-    container_name: gujarat-portal-frontend
+        - VITE_API_URL=http://18.191.185.246:8001
+        - VITE_BASE_PATH=/unified-portal/
+    container_name: unified-portal-frontend
     ports:
-      - "3003:80"
+      - "3002:80"
     depends_on:
       - backend
     networks:
-      - gujarat-portal-network
+      - unified-portal-network
     restart: always
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-  # Nginx Reverse Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: gujarat-portal-nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./ssl:/etc/nginx/ssl:ro
-    depends_on:
-      - backend
-      - frontend
-    networks:
-      - gujarat-portal-network
-    restart: always
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -92,5 +65,5 @@ volumes:
     driver: local
 
 networks:
-  gujarat-portal-network:
+  unified-portal-network:
     driver: bridge
