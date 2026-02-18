@@ -38,8 +38,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://18.191.185.246:8001
-        - VITE_BASE_PATH=/unified-portal/
+        - VITE_API_URL=http://18.191.185.246/portal/api
+        - VITE_BASE_PATH=/portal/
     container_name: unified-portal-frontend
     ports:
       - "3002:80"
