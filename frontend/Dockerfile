@@ -29,6 +29,9 @@ FROM nginx:alpine
 # Copy built files to nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+# Copy public assets to dist root for base path compatibility
+COPY --from=builder /app/public/*.{jpg,jpeg,png,gif,svg,webp} /usr/share/nginx/html/ 2>/dev/null || true
+
 # Create nginx config that handles base path
 RUN echo 'server { \
     listen 80; \
@@ -38,7 +41,7 @@ RUN echo 'server { \
     location / { \
         try_files $uri $uri/ /index.html; \
     } \
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ { \
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp)$ { \
         expires 1y; \
         add_header Cache-Control "public, immutable"; \
     } \
