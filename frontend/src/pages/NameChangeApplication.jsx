@@ -941,29 +941,17 @@ const NameChangeApplication = () => {
                 </div>
 
                 {/* Status Message */}
-                {automationResult.success ? (
-                  <div className="bg-green-50 border-l-4 border-green-500 p-3">
-                    <div className="flex gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="font-bold text-green-800 text-sm mb-0.5">Application Submitted Successfully</h4>
-                        <p className="text-green-700 text-xs">Your name change request has been submitted to Torrent Power. You will receive a confirmation email shortly.</p>
-                      </div>
+                <div className="bg-red-50 border-l-4 border-red-500 p-3">
+                  <div className="flex gap-2">
+                    <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white font-bold text-xs">✕</span>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-red-800 text-sm mb-0.5">Application has not been submitted due to incorrect data.</h4>
+                      <p className="text-red-700 text-xs">This is a demo with dummy data. The form was filled but not submitted to Torrent Power.</p>
                     </div>
                   </div>
-                ) : (
-                  <div className="bg-red-50 border-l-4 border-red-500 p-3">
-                    <div className="flex gap-2">
-                      <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-white font-bold text-xs">✕</span>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-red-800 text-sm mb-0.5">Application has not been submitted due to incorrect data.</h4>
-                        <p className="text-red-700 text-xs">This is a demo with dummy data. The form was filled but not submitted to Torrent Power.</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                </div>
               </div>
 
               {/* OK Button */}
