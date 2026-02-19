@@ -868,7 +868,7 @@ const NameChangeApplication = () => {
       {/* Completion Modal - Shows after automation completes */}
       {automationCompleted && automationResult && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex items-center justify-between rounded-t-lg">
               <div className="flex items-center gap-2">
@@ -947,8 +947,7 @@ const NameChangeApplication = () => {
                       <span className="text-white font-bold text-xs">✕</span>
                     </div>
                     <div>
-                      <h4 className="font-bold text-red-800 text-sm mb-0.5">Application has not been submitted due to incorrect data.</h4>
-                      <p className="text-red-700 text-xs">This is a demo with dummy data. The form was filled but not submitted to Torrent Power.</p>
+                      <h4 className="font-bold text-red-800 text-sm">Application has not been submitted due to incorrect data.</h4>
                     </div>
                   </div>
                 </div>
