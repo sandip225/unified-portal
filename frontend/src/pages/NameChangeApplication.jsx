@@ -868,7 +868,7 @@ const NameChangeApplication = () => {
       {/* Completion Modal - Shows after automation completes */}
       {automationCompleted && automationResult && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl">
+          <div className="bg-white rounded-lg shadow-2xl w-full max-w-4xl">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex items-center justify-between rounded-t-lg">
               <div className="flex items-center gap-2">
@@ -941,9 +941,9 @@ const NameChangeApplication = () => {
                 </div>
 
                 {/* Status Message */}
-                <div className="bg-red-50 border-l-4 border-red-500 p-3">
-                  <div className="flex gap-2">
-                    <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="bg-red-50 border-2 border-red-500 p-4 mt-4">
+                  <div className="flex gap-3">
+                    <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-white font-bold text-xs">✕</span>
                     </div>
                     <div>
