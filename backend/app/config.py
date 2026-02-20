@@ -4,7 +4,8 @@ import json
 
 class Settings(BaseSettings):
     APP_NAME: str = "Unified Services Portal"
-    DATABASE_URL: str = "sqlite:///./unified_portal.db"
+    # PostgreSQL Database URL
+    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/unified_portal"
     SECRET_KEY: str = "your-secret-key-here-change-in-production"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
@@ -52,7 +53,7 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
-        extra = "ignore"  # This will ignore extra fields instead of raising validation errors
+        extra = "ignore"
 
 def get_settings():
     return Settings()

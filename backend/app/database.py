@@ -5,9 +5,13 @@ from app.config import get_settings
 
 settings = get_settings()
 
-# SQLite needs connect_args for check_same_thread
-connect_args = {"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {}
-engine = create_engine(settings.DATABASE_URL, connect_args=connect_args)
+# Create engine based on database URL
+engine = create_engine(
+    settings.DATABASE_URL,
+    pool_pre_ping=True,  # Verify connections before using them
+    pool_recycle=3600,   # Recycle connections after 1 hour
+)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

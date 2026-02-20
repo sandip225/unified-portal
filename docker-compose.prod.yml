@@ -1,6 +1,32 @@
 version: '3.8'
 
 services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: unified-portal-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=unified_portal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - unified-portal-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   # Backend Service
   backend:
     build:
@@ -13,12 +39,16 @@ services:
       - ./backend/.env.prod
     environment:
       - PYTHONPATH=/app
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/unified_portal
     volumes:
-      - backend-db:/app/data
+      - backend-data:/app/data
       - ./backend/screenshots:/app/screenshots
       - ./backend/uploads:/app/uploads
     networks:
       - unified-portal-network
+    depends_on:
+      db:
+        condition: service_healthy
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -61,7 +91,9 @@ services:
         max-file: "3"
 
 volumes:
-  backend-db:
+  postgres-data:
+    driver: local
+  backend-data:
     driver: local
 
 networks:
