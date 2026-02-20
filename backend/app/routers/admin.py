@@ -219,10 +219,21 @@ async def init_admin(db: Session = Depends(get_db)):
         # Check if admin already exists
         existing_admin = db.query(AdminUser).filter(AdminUser.username == "admin").first()
         if existing_admin:
+            print(f"Admin already exists with ID: {existing_admin.id}")
             # Update the password to ensure it's correct
             existing_admin.password_hash = get_password_hash("admin123")
             db.commit()
-            return {"message": "Admin password updated"}
+            db.refresh(existing_admin)
+            print(f"Admin password updated")
+            return {
+                "message": "Admin password updated",
+                "admin": {
+                    "id": existing_admin.id,
+                    "username": existing_admin.username,
+                    "email": existing_admin.email,
+                    "role": existing_admin.role
+                }
+            }
         
         # Create default admin with hashed password
         hashed_pwd = get_password_hash("admin123")
@@ -235,11 +246,18 @@ async def init_admin(db: Session = Depends(get_db)):
             role=AdminRole.SUPER_ADMIN,
             is_active=True
         )
+        print(f"Adding admin to session...")
         db.add(admin)
+        print(f"Committing transaction...")
         db.commit()
+        print(f"Refreshing admin object...")
         db.refresh(admin)
         
-        print(f"Admin created with ID: {admin.id}")
+        print(f"Admin created successfully with ID: {admin.id}")
+        
+        # Verify admin was created
+        verify_admin = db.query(AdminUser).filter(AdminUser.username == "admin").first()
+        print(f"Verification query result: {verify_admin}")
         
         return {
             "message": "Admin module initialized successfully",
@@ -251,8 +269,10 @@ async def init_admin(db: Session = Depends(get_db)):
             }
         }
     except Exception as e:
+        print(f"Init error occurred: {type(e).__name__}: {str(e)}")
+        import traceback
+        traceback.print_exc()
         db.rollback()
-        print(f"Init error: {e}")
         raise HTTPException(status_code=500, detail=f"Initialization failed: {str(e)}")
 
 @router.post("/create-admin")

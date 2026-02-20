@@ -35,11 +35,6 @@ api.interceptors.request.use((config) => {
     }
   }
   
-  // Fix double /api in URL
-  if (config.url?.startsWith('/api/')) {
-    config.url = config.url.replace('/api/', '/');
-  }
-  
   return config;
 });
 
