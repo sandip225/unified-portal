@@ -17,13 +17,12 @@ export default function AdminDashboard() {
       const adminToken = localStorage.getItem('admin_token');
       if (!adminToken) {
         console.error('No admin token found');
+        navigate('/admin/login');
         setLoading(false);
         return;
       }
       
-      const response = await axios.get('/admin/dashboard', {
-        headers: { 'Authorization': `Bearer ${adminToken}` }
-      });
+      const response = await axios.get('/admin/dashboard');
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
