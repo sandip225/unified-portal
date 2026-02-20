@@ -81,8 +81,12 @@ class ApplicationUpdate(BaseModel):
 
 def verify_password(plain_password, hashed_password):
     try:
-        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-    except:
+        # Handle both string and bytes for hashed_password
+        if isinstance(hashed_password, str):
+            hashed_password = hashed_password.encode('utf-8')
+        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password)
+    except Exception as e:
+        print(f"Password verification error: {e}")
         return False
 
 def get_password_hash(password):
