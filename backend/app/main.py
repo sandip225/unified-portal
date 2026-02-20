@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
 from app.routers import auth, users, services, applications, services_api, whatsapp, documents, services_data, portal_redirect, proxy, grants, admin
 from app.config import get_settings
+# Import admin models to register them with Base
+from app import models_admin
 
 settings = get_settings()
 
