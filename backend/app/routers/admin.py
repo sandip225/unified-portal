@@ -127,7 +127,18 @@ async def admin_login(login_data: AdminLoginRequest, db: Session = Depends(get_d
     """Admin login endpoint"""
     admin = db.query(AdminUser).filter(AdminUser.username == login_data.username).first()
     
-    if not admin or not verify_password(login_data.password, admin.password_hash):
+    if not admin:
+        print(f"Admin user '{login_data.username}' not found")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password"
+        )
+    
+    password_valid = verify_password(login_data.password, admin.password_hash)
+    print(f"Password verification for '{login_data.username}': {password_valid}")
+    print(f"Stored hash: {admin.password_hash[:20]}...")
+    
+    if not password_valid:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password"
