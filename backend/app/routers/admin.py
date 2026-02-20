@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, desc
 from typing import List, Optional
 from datetime import datetime, timedelta
-from passlib.context import CryptContext
 from jose import JWTError, jwt
+import bcrypt
 from ..database import get_db
 from ..models_admin import (
     AdminUser, Package, AIRecommendation, AdminAuditLog, 
@@ -20,7 +20,6 @@ from pydantic import BaseModel
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
 # Security
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/admin/login")
 
 SECRET_KEY = "your-secret-key-change-in-production"  # TODO: Move to env
@@ -81,20 +80,13 @@ class ApplicationUpdate(BaseModel):
 # ============================================
 
 def verify_password(plain_password, hashed_password):
-    import hashlib
-    # First try SHA256 (for demo admin)
-    sha256_hash = hashlib.sha256(plain_password.encode()).hexdigest()
-    if sha256_hash == hashed_password:
-        return True
-    
-    # Then try bcrypt
     try:
-        return pwd_context.verify(plain_password, hashed_password)
+        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
     except:
         return False
 
 def get_password_hash(password):
-    return pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt(rounds=4)).decode('utf-8')
 
 def create_access_token(data: dict):
     to_encode = data.copy()
