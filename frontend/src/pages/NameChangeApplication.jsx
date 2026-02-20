@@ -3,7 +3,7 @@ import { useParams, useSearchParams, Link } from 'react-router-dom';
 import {
   Zap, Flame, Droplets, Building, ArrowLeft, Upload,
   User, Phone, Mail, MapPin, FileText, Calendar,
-  AlertCircle, CheckCircle, Info, Sparkles, Play
+  AlertCircle, CheckCircle, Info, Sparkles, ArrowRight
 } from 'lucide-react';
 import axios from '../api/axios';
 
@@ -776,7 +776,7 @@ const NameChangeApplication = () => {
                 disabled={loading}
                 className="px-8 py-3 rounded-lg font-bold transition-all duration-300 flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               >
-                <Play className="w-5 h-5" />
+                <ArrowRight className="w-5 h-5" />
                 Start
               </button>
             ) : (

@@ -64,22 +64,22 @@ export default function AdminLayout({ children }) {
         </nav>
 
         {/* User Info */}
-        <div className="absolute bottom-0 w-full p-4 border-t border-gray-800">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800 bg-gray-900">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-lg">👤</span>
             </div>
             {sidebarOpen && (
-              <div className="flex-1">
-                <p className="text-sm font-medium">{adminUser.username}</p>
-                <p className="text-xs text-gray-400">{adminUser.role}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{adminUser.username}</p>
+                <p className="text-xs text-gray-400 truncate">{adminUser.role}</p>
               </div>
             )}
           </div>
           {sidebarOpen && (
             <button
               onClick={handleLogout}
-              className="w-full mt-3 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm"
+              className="w-full mt-3 px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm font-medium whitespace-nowrap"
             >
               Logout
             </button>

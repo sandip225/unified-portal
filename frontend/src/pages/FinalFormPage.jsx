@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams, Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Loader, AlertCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Loader, AlertCircle, ArrowRight } from 'lucide-react';
 
 const FinalFormPage = () => {
   const location = useLocation();
@@ -338,7 +338,7 @@ const FinalFormPage = () => {
               type="submit"
               className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-bold hover:from-blue-700 hover:to-purple-700 transition-colors flex items-center gap-2 shadow-lg"
             >
-              <Play className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5" />
               Submit Application
             </button>
           </div>
