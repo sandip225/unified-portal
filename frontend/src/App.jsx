@@ -57,6 +57,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
+  const token = localStorage.getItem('token');
   
   if (loading) {
     return (
@@ -69,7 +70,12 @@ const ProtectedRoute = ({ children }) => {
     );
   }
   
-  if (!user) {
+  // If there's a token, allow access even if user data isn't loaded yet
+  if (token) {
+    return children;
+  }
+  
+  if (!user && !token) {
     return <Navigate to="/login" replace />;
   }
   

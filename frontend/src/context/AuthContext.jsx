@@ -39,7 +39,18 @@ export const AuthProvider = ({ children }) => {
       });
       
       localStorage.setItem('token', response.data.access_token);
-      await fetchUser();
+      
+      // Fetch user data with the new token
+      try {
+        const userResponse = await api.get('/auth/me', {
+          headers: { 'Authorization': `Bearer ${response.data.access_token}` }
+        });
+        setUser(userResponse.data);
+      } catch (userError) {
+        console.error('Error fetching user:', userError);
+        // Still consider login successful even if user fetch fails
+      }
+      
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
