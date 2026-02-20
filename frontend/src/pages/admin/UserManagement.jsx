@@ -15,12 +15,23 @@ export default function UserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/admin/users', {
-        params: { status: statusFilter !== 'all' ? statusFilter : null }
+      const adminToken = localStorage.getItem('admin_token');
+      if (!adminToken) {
+        console.error('No admin token found');
+        return;
+      }
+      
+      const response = await axios.get('/admin/users', {
+        params: { status: statusFilter !== 'all' ? statusFilter : null },
+        headers: { 'Authorization': `Bearer ${adminToken}` }
       });
       setUsers(response.data.users);
     } catch (error) {
       console.error('Error fetching users:', error);
+      if (error.response?.status === 401) {
+        alert('Admin session expired. Please login again.');
+        window.location.href = '/admin/login';
+      }
     } finally {
       setLoading(false);
     }
@@ -30,7 +41,10 @@ export default function UserManagement() {
     if (!confirm('Are you sure you want to block/unblock this user?')) return;
     
     try {
-      await axios.put(`/api/admin/users/${userId}/block`);
+      const adminToken = localStorage.getItem('admin_token');
+      await axios.put(`/admin/users/${userId}/block`, {}, {
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+      });
       fetchUsers();
     } catch (error) {
       console.error('Error blocking user:', error);
@@ -40,7 +54,10 @@ export default function UserManagement() {
 
   const viewUserDetails = async (userId) => {
     try {
-      const response = await axios.get(`/api/admin/users/${userId}`);
+      const adminToken = localStorage.getItem('admin_token');
+      const response = await axios.get(`/admin/users/${userId}`, {
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+      });
       setSelectedUser(response.data);
       setShowModal(true);
     } catch (error) {
