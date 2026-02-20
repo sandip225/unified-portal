@@ -161,6 +161,41 @@ async def admin_login(login_data: AdminLoginRequest, db: Session = Depends(get_d
         }
     }
 
+@router.post("/init")
+async def init_admin(db: Session = Depends(get_db)):
+    """Initialize admin module - create tables and default admin"""
+    from ..database import Base, engine
+    
+    # Create all tables
+    Base.metadata.create_all(bind=engine)
+    
+    # Check if admin already exists
+    existing_admin = db.query(AdminUser).filter(AdminUser.username == "admin").first()
+    if existing_admin:
+        return {"message": "Admin already initialized"}
+    
+    # Create default admin
+    admin = AdminUser(
+        username="admin",
+        email="admin@gfuturetech.com",
+        password_hash=get_password_hash("admin123"),
+        role=AdminRole.SUPER_ADMIN,
+        is_active=True
+    )
+    db.add(admin)
+    db.commit()
+    db.refresh(admin)
+    
+    return {
+        "message": "Admin module initialized successfully",
+        "admin": {
+            "id": admin.id,
+            "username": admin.username,
+            "email": admin.email,
+            "role": admin.role
+        }
+    }
+
 @router.post("/create-admin")
 async def create_admin_user(username: str, email: str, password: str, db: Session = Depends(get_db)):
     """Create first admin user (disable this in production)"""
@@ -177,8 +212,17 @@ async def create_admin_user(username: str, email: str, password: str, db: Sessio
     )
     db.add(admin)
     db.commit()
+    db.refresh(admin)
     
-    return {"message": "Admin created successfully"}
+    return {
+        "message": "Admin created successfully",
+        "admin": {
+            "id": admin.id,
+            "username": admin.username,
+            "email": admin.email,
+            "role": admin.role
+        }
+    }
 
 # ============================================
 # DASHBOARD
