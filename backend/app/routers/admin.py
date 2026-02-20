@@ -137,6 +137,8 @@ async def get_current_admin_user(token: str = Depends(oauth2_scheme), db: Sessio
 @router.post("/login", response_model=Token)
 async def admin_login(login_data: AdminLoginRequest, db: Session = Depends(get_db)):
     """Admin login endpoint"""
+    print(f"Admin login attempt - Username: {login_data.username}")
+    
     admin = db.query(AdminUser).filter(AdminUser.username == login_data.username).first()
     
     if not admin:
@@ -149,6 +151,36 @@ async def admin_login(login_data: AdminLoginRequest, db: Session = Depends(get_d
     password_valid = verify_password(login_data.password, admin.password_hash)
     print(f"Password verification for '{login_data.username}': {password_valid}")
     print(f"Stored hash: {admin.password_hash[:20]}...")
+    
+    if not password_valid:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password"
+        )
+    
+    if not admin.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin account is disabled"
+        )
+    
+    # Update last login
+    admin.last_login = datetime.utcnow()
+    db.commit()
+    
+    # Create access token
+    access_token = create_access_token(data={"sub": admin.username})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "admin": {
+            "id": admin.id,
+            "username": admin.username,
+            "email": admin.email,
+            "role": admin.role
+        }
+    }
     
     if not password_valid:
         raise HTTPException(
