@@ -73,6 +73,7 @@ class User(Base):
     state = Column(String(100))
     pincode = Column(String(6))
     date_of_birth = Column(String(10))
+    is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
